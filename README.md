@@ -1,15 +1,15 @@
-# Course Project: JavaBeans POS System
+# Course Project: Movie ticket booking system
 
 **Course:** Object Oriented Programming
 
 ---
-![coffee shop](Gemini_Generated_Image_tsk4u1tsk4u1tsk4.png)
+
 
 ## 1. The Vision
 
 **"From Console to Cloud-Connected GUI"**
 
-You have been hired by a local startup, **JavaBeans Coffee**, to modernize their business. Currently, they use pen and paper to track orders, leading to calculation errors and lost sales data.
+You have been hired by a local startup, **Movie ticket booking system**, to modernize their business. Currently, they use pen and paper to track orders, leading to calculation errors and lost sales data.
 
 **Your Mission:**
 Build a professional **Point of Sale (POS) System** using Java. By Week 10, this application will allow a Barista to log in, view a graphical menu, process orders, and save sales history to a MySQL database.
