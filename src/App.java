@@ -7,9 +7,9 @@ public class App {
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(System.in)) {
             // Sample movies
-            Movie m1 = new Movie("Avatar 2", 5.0);
-            Movie m2 = new Movie("John Wick 4", 6.0);
-            Movie m3 = new Movie("Spider-Man", 7.0);
+            Movie m1 = new Movie("Avatar 2", 5.0, "2023-12-16");
+            Movie m2 = new Movie("John Wick 4", 6.0, "2023-03-24");
+            Movie m3 = new Movie("Spider-Man", 7.0, "2024-07-03");
 
             Cart cart = new Cart();
 
@@ -37,14 +37,14 @@ public class App {
                 cart.addItem(selectedMovie);
             }
 
-            // Calculate totals
-            double subtotal = cart.calculateSubtotal();
-            double tax = subtotal * ShopSettings.TAX_RATE;
-            double grandTotal = subtotal + tax;
-
-            System.out.println("\nSubtotal: $" + subtotal);
-            System.out.println("Tax (10%): $" + tax);
-            System.out.println("Grand Total: $" + grandTotal);
+            System.out.println("======================== Movie Ticket Booking =======================");
+            System.out.println("Subtotal: $" + cart.calculateSubtotal());
+            System.out.println("Tax: $" + cart.calculateTax());
+            System.out.println("Grand Total: $" + cart.calculateGrandTotal());
+            System.out.println("=====================================================================");
+            System.out.println("                        | Total price: $" + cart.calculateGrandTotal() * (1 - ShopSettings.DISCOUNT_RATE)+ " |");
+            System.out.println("                        =======================");
+        }
         }
     }
-}
+
