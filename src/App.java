@@ -2,7 +2,10 @@ import model.Movie;
 import service.Cart;
 import service.ManagerStaff;
 import service.ShopSettings;
+import service.StandardTicket;
 import service.Ticketing_Agent;
+import service.PremiumTicket;
+import service.Ticket;
 import service.istaff;
 
 import java.util.ArrayList;
@@ -225,10 +228,35 @@ public class App {
             return;
         }
 
+        System.out.println("Select ticket type:");
+        System.out.println("1) Standard (normal seat)");
+        System.out.println("2) Premium (VIP seat)");
+        System.out.print("Choose: ");
+        int ticketType = sc.nextInt();
+        sc.nextLine();
+
+        if (ticketType != 1 && ticketType != 2) {
+            System.out.println("Invalid ticket type.");
+            return;
+        }
+
+        System.out.print("Starting seat number: ");
+        int startSeat = sc.nextInt();
+        sc.nextLine();
+
+        if (startSeat <= 0) {
+            System.out.println("Seat number must be greater than 0.");
+            return;
+        }
+
         Cart cart = new Cart();
         Movie selectedMovie = movies.get(movieChoice - 1);
         for (int i = 0; i < tickets; i++) {
-            cart.addItem(selectedMovie);
+            int seatNumber = startSeat + i;
+            Ticket ticket = (ticketType == 1)
+                    ? new StandardTicket(selectedMovie, seatNumber)
+                    : new PremiumTicket(selectedMovie, seatNumber);
+            cart.addItem(ticket);
         }
 
         printCheckout(cart);
@@ -248,6 +276,10 @@ public class App {
 
     private static void printCheckout(Cart cart) {
         System.out.println("======================== Movie Ticket Booking =======================");
+        System.out.println("Tickets:");
+        for (Ticket ticket : cart.getItems()) {
+            System.out.println("- " + ticket);
+        }
         System.out.println("Subtotal: $" + cart.calculateSubtotal());
         System.out.println("Tax: $" + cart.calculateTax());
         System.out.println("Grand Total: $" + cart.calculateGrandTotal());

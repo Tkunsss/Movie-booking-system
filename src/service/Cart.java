@@ -1,30 +1,29 @@
 package service;
 
-import model.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
 
-    private List<Movie> items;
+    private List<Ticket> items;
 
     public Cart() {
         items = new ArrayList<>();
     }
 
-    public void addItem(Movie movie) {
-        items.add(movie);
-        System.out.println(movie.getTitle() + " added to cart.");
+    public void addItem(Ticket ticket) {
+        items.add(ticket);
+        System.out.println(ticket.toString());
     }
 
-    public List<Movie> getItems() {
+    public List<Ticket> getItems() {
         return items;
     }
 
     public double calculateSubtotal() {
         double total = 0;
-        for (Movie m : items) {
-            total += m.getPrice();
+        for (Ticket t : items) {
+            total += t.calculatePrice();
         }
         return total;
     }
