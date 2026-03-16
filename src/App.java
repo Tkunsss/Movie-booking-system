@@ -299,3 +299,24 @@ public class App {
         return allowed ? "\u2705" : "\u274C";
     }
 }
+
+   
+    public static void main(String[] args) {
+        System.out.println("Main program started...");
+        
+    new Thread(() -> {
+        try {
+            Thread.sleep(1000);
+            System.out.println("\n[Background Task] Checking for updates...");
+            // Simulate update check
+            Thread.sleep(2000);
+            System.out.println("[Background Task] No updates found.");
+        } catch (InterruptedException e) {
+            System.err.println("Background task interrupted: " + e.getMessage());
+        }
+    }).start();
+    System.out.println("Main program continues immediately...");
+}
+
+
+

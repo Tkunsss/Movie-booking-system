@@ -102,6 +102,27 @@ public class CashierStaff implements istaff{
         return true;
     }
 
+    public void processOrder(String qtyInput){
+    int qty;
+    try {
+        qty = Integer.parseInt(qtyInput);
+        System.out.println("Order accepted for" + qty + " tickets.");
+        
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid quantity input. Please enter a valid integer.");
+        return;
+    }
+}
+
+    public void checkout (Customer customer, double totalAmount){
+    if(customer.deductBalance(totalAmount)){
+        System.out.println("Checkout successful. Remaining balance: $" + customer.getBalance());
+        ReceiptGenerator.generateReceipt(customer, totalAmount);
+    } else {
+        System.out.println("Checkout failed. Insufficient balance.");
+    }
+}
+
     // ====== toString ======
     @Override
     public String toString() {
@@ -115,3 +136,4 @@ public class CashierStaff implements istaff{
                 '}';
     }
 }
+
