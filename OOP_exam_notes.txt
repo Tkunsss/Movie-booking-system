@@ -1,0 +1,265 @@
+OOP Oral Exam Quick Notes (Your Project)
+Use this 3-step formula for any answer:
+1) Define the concept in 1-2 sentences.
+2) Point to where it appears in your code (file + class/method).
+3) Explain why you designed it that way (benefit).
+
+Project Anchor Files (use these often)
+- Encapsulation + validation: src/service/Customer.java
+- Inheritance + overriding: src/service/Ticket.java, StandardTicket.java, PremiumTicket.java
+- Interface + polymorphism: src/service/istaff.java + ManagerStaff/CashierStaff/Ticketing_Agent
+- Composition: src/model/Order.java (has Cart + Totals + Customer), src/service/Cart.java (has List<Ticket>)
+- Collections: src/ui/AppState.java (lists of movies/staff/customers/orders)
+- Static: src/service/ShopSettings.java, src/service/ReceiptGenerator.java, src/db/Database.java
+- Exceptions: DAO classes in src/db/*.java (try/catch), UI parsing in src/ui/*.java
+- GUI: src/ui/*.java (Swing)
+
+Set 1
+Q1: Class = blueprint, Object = real instance. Fields = state, methods = behavior.
+Q2: Example class Customer (src/service/Customer.java): fields name/balance, method deductBalance() changes state.
+Q3: Using objects keeps data + behavior together; avoids one huge main() and duplicated logic.
+
+Set 2
+Q1: State = stored data, behavior = actions. Fields represent state, methods represent behavior.
+Q2: Order (src/model/Order.java): state = totals/status, behavior in UI (checkout/refund) changes status.
+Q3: Keeping state + behavior together prevents mismatch and makes code easier to maintain.
+
+Set 3
+Q1: Constructor initializes object at creation; normal methods act later.
+Q2: Movie constructor in src/model/Movie.java sets title/price/date immediately.
+Q3: Without proper init, objects may be invalid (null/0), causing bugs in pricing or UI.
+
+Set 4
+Q1: this refers to current object; used to distinguish fields vs parameters.
+Q2: Customer setters use this.field in src/service/Customer.java.
+Q3: Without this, fields may not be updated and state stays wrong.
+
+Set 5
+Q1: Encapsulation hides fields (private) and controls access via methods.
+Q2: Customer has private fields + getters/setters in src/service/Customer.java.
+Q3: Public fields allow invalid values, break validation, and cause inconsistent data.
+
+Set 6
+Q1: Getters/setters give controlled access and validation.
+Q2: Customer.setPhone validates digits/length (src/service/Customer.java).
+Q3: Some setters shouldn’t exist (e.g., setting balance directly) to prevent abuse.
+
+Set 7
+Q1: Primitive = value stored directly; reference = points to object.
+Q2: Two variables can reference same Customer object (lists in AppState).
+Q3: Shared references can cause unexpected side effects if you modify through one reference.
+
+Set 8
+Q1: Passing primitive copies value; passing object passes reference.
+Q2: Methods use Customer object (e.g., ReceiptGenerator.generateReceipt in src/service/ReceiptGenerator.java).
+Q3: References allow collaboration without copying entire objects.
+
+Set 9
+Q1: Inheritance = child inherits parent; not same as copying code.
+Q2: StandardTicket extends Ticket (src/service/StandardTicket.java).
+Q3: It is a real is-a: a StandardTicket IS a Ticket.
+
+Set 10
+Q1: super calls parent constructor or method.
+Q2: StandardTicket calls super(movie, seat) in constructor.
+Q3: If parent isn’t initialized, child may miss required data like movie/seat.
+
+Set 11
+Q1: Overriding replaces parent method in child.
+Q2: PremiumTicket overrides calculatePrice() in src/service/PremiumTicket.java.
+Q3: Avoids if-else based on type and keeps pricing logic in subclasses.
+
+Set 12
+Q1: Polymorphism = one reference can work with many actual types.
+Q2: List<Ticket> in Cart holds StandardTicket and PremiumTicket (src/service/Cart.java).
+Q3: New ticket types can be added without changing Cart logic.
+
+Set 13
+Q1: Reference type is compile-time; real object type is runtime.
+Q2: Ticket t = new PremiumTicket(...) (Ticket reference, PremiumTicket object).
+Q3: Java uses runtime type to choose overridden method (dynamic dispatch).
+
+Set 14
+Q1: Interface = contract of methods.
+Q2: istaff interface promises can(), getUsername(), etc. (src/service/istaff.java).
+Q3: UI can treat staff uniformly without depending on concrete class.
+
+Set 15
+Q1: Interfaces enable polymorphism.
+Q2: List<istaff> in AppState can store ManagerStaff/CashierStaff/Ticketing_Agent.
+Q3: Add new staff type with minimal changes.
+
+Set 16
+Q1: Abstract class has shared behavior but can’t be instantiated.
+Q2: Ticket could be abstract if only subclasses should be created.
+Q3: Prevents creating incomplete base objects.
+
+Set 17
+Q1: Abstract method has no body; subclasses must implement.
+Q2: Ticket.calculatePrice could be abstract with different pricing.
+Q3: Forces consistent design across subclasses.
+
+Set 18
+Q1: Abstract class can have state + methods; interface only method contracts.
+Q2: Use interface for staff (multiple implementations), abstract for Ticket if needed.
+Q3: Interface is better when you want flexible multiple implementations.
+
+Set 19
+Q1: has-a = composition, is-a = inheritance.
+Q2: Order has-a Cart; StandardTicket is-a Ticket.
+Q3: Wrong choice makes design confusing and harder to extend.
+
+Set 20
+Q1: Composition = use objects inside, inheritance = extend.
+Q2: Cart contains List<Ticket>.
+Q3: Composition keeps classes focused; inheritance can be too rigid.
+
+Set 21
+Q1: Collaboration = classes work together without inheriting.
+Q2: ReceiptGenerator uses Customer + Cart to produce receipt.
+Q3: Collaboration distributes responsibility and improves maintainability.
+
+Set 22
+Q1: Single responsibility makes class easier to maintain.
+Q2: MovieDao handles only movie DB operations.
+Q3: App.java does too much; could be refactored into controllers.
+
+Set 23
+Q1: Cohesion = class does one focused job.
+Q2: OrderDao has cohesive DB operations for orders.
+Q3: Low cohesion makes code harder to test and change.
+
+Set 24
+Q1: Loose coupling = minimal dependencies.
+Q2: UI uses DAOs instead of raw SQL.
+Q3: Interfaces or DAOs reduce coupling and make changes safer.
+
+Set 25
+Q1: Instance field belongs to object; static shared by class.
+Q2: Customer.balance should be instance not static.
+Q3: Static balance would incorrectly share money across customers.
+
+Set 26
+Q1: Instance method works on object state; static doesn’t.
+Q2: Customer.deductBalance must be instance.
+Q3: Too many static methods leads to procedural code.
+
+Set 27
+Q1: Overloading = same name, different params; overriding = child replaces parent.
+Q2: ReceiptGenerator.generateReceipt overloaded with two signatures.
+Q3: Overloading helps reuse; overriding helps polymorphism.
+
+Set 28
+Q1: ArrayList grows dynamically, unlike fixed array.
+Q2: AppState uses List<Movie> / List<Order>.
+Q3: Movie list changes, so ArrayList fits.
+
+Set 29
+Q1: Collection of common type simplifies processing.
+Q2: List<Ticket> holds StandardTicket + PremiumTicket.
+Q3: Loop over Ticket list and call calculatePrice() for all.
+
+Set 30
+Q1: Validation prevents invalid state.
+Q2: Customer.setPhone validates digits/length.
+Q3: Enforce rules inside object methods for safety.
+
+Set 31
+Q1: Exception = runtime error; syntax error = compile-time.
+Q2: Parsing numbers in UI can throw NumberFormatException.
+Q3: Exceptions supplement validation; don’t replace good design.
+
+Set 32
+Q1: try-catch handles errors to avoid crash.
+Q2: DAO methods catch SQLException.
+Q3: Overusing try-catch hides poor validation.
+
+Set 33
+Q1: Preventing error = validate early; catching = handle after.
+Q2: Validate balance before deductBalance.
+Q3: Validation should come first for cleaner design.
+
+Set 34
+Q1: Field = class member; local variable = method-only.
+Q2: In Customer, fields are private; locals in deductBalance.
+Q3: Poor scope causes confusion and bugs.
+
+Set 35
+Q1: Good names communicate responsibility.
+Q2: MovieDao clearly signals DB access for Movie.
+Q3: Bad names hide intent and confuse collaboration.
+
+Set 36
+Q1: Access modifiers control visibility.
+Q2: Customer fields are private to protect data.
+Q3: Poor access control makes debugging and maintenance harder.
+
+Set 37
+Q1: Hide implementation details behind methods.
+Q2: ReceiptGenerator hides file-writing details.
+Q3: Easier to change internals without breaking other classes.
+
+Set 38
+Q1: Reusability means logic works in multiple contexts.
+Q2: TotalsUtil.calculateTotals used by customer/cashier flows.
+Q3: Centralizing logic avoids duplication.
+
+Set 39
+Q1: Inheritance is not always best; composition may be better.
+Q2: Cart vs Ticket shows composition.
+Q3: Composition is more flexible and avoids deep hierarchies.
+
+Set 40
+Q1: Too many type checks signals weak OOP.
+Q2: Ticket pricing uses polymorphism instead of if-else.
+Q3: Overriding reduces conditionals and makes extension easy.
+
+Set 41
+Q1: General class + specialized subclass.
+Q2: Ticket (general) vs PremiumTicket (specialized).
+Q3: Use inheritance for true specialization; else use composition.
+
+Set 42
+Q1: Objects should manage their own behavior.
+Q2: Customer.deductBalance belongs in Customer.
+Q3: Moving it outside breaks encapsulation.
+
+Set 43
+Q1: Constructors ensure valid state.
+Q2: Customer constructor enforces validation.
+Q3: Valid state prevents later bugs.
+
+Set 44
+Q1: Responsibility placement matters.
+Q2: ReceiptGenerator owns receipt creation.
+Q3: Putting it elsewhere would reduce cohesion.
+
+Set 45
+Q1: State + behavior should align.
+Q2: Cart holds tickets and calculates totals.
+Q3: Separate data + logic makes bugs more likely.
+
+Set 46
+Q1: Design for extension vs current needs.
+Q2: New ticket type can be added via Ticket subclasses.
+Q3: Polymorphism supports extension without refactor.
+
+Set 47
+Q1: Extending system vs modifying everywhere.
+Q2: Add new staff type implementing istaff.
+Q3: Interfaces reduce widespread edits.
+
+Set 48
+Q1: Testing easier with clear I/O.
+Q2: TotalsUtil.calculateTotals is easy to test.
+Q3: Tight coupling makes tests hard.
+
+Set 49
+Q1: Signs for refactor: giant class, repeated logic, mixed responsibility.
+Q2: App.java is large; could split into controllers.
+Q3: Refactor improves cohesion and maintainability.
+
+Set 50
+Q1: Encapsulation, Inheritance, Polymorphism.
+Q2: Encapsulation = Customer fields; Inheritance = Ticket->Standard/Premium; Polymorphism = List<Ticket>.
+Q3: Strong decision: Ticket hierarchy. Weak part: App.java too big.

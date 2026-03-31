@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Run App",
+      "request": "launch",
+      "mainClass": "App",
+      "classPaths": [
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/lib/mysql-connector-j-9.6.0.jar",
+        "${workspaceFolder}/src/lib/mysql-connector-j-9.6.0.jar"
+      ]
+    }
+  ]
+}

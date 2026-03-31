@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build (javac)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".vscode/build.ps1"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "run (java)",
+      "type": "shell",
+      "command": "java",
+      "args": [
+        "-cp",
+        ".;lib/mysql-connector-j-9.6.0.jar;bin",
+        "App"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}
