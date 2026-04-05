@@ -17,7 +17,6 @@ import java.awt.FlowLayout;
 public class AgentPanel extends JPanel {
     private final AppState state;
     private final DefaultListModel<String> orderModel = new DefaultListModel<>();
-    private final DefaultListModel<String> menuModel = new DefaultListModel<>();
 
     public AgentPanel(AppState state, Runnable onLogout) {
         this.state = state;
@@ -29,7 +28,7 @@ public class AgentPanel extends JPanel {
         javax.swing.JLabel title = new javax.swing.JLabel("Ticketing Agent");
         title.setFont(UiTheme.H2);
         title.setForeground(java.awt.Color.WHITE);
-        javax.swing.JLabel sub = new javax.swing.JLabel("Orders and menu items");
+        javax.swing.JLabel sub = new javax.swing.JLabel("Orders");
         sub.setForeground(new java.awt.Color(220, 220, 220));
         JButton logout = UiTheme.dangerButton("Logout");
         logout.addActionListener(e -> onLogout.run());
@@ -43,11 +42,9 @@ public class AgentPanel extends JPanel {
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.add("Orders", buildOrdersTab());
-        tabs.add("Menu Items", buildMenuTab());
         add(tabs, BorderLayout.CENTER);
 
         refreshOrders();
-        refreshMenu();
     }
 
     private JPanel buildOrdersTab() {
@@ -69,34 +66,6 @@ public class AgentPanel extends JPanel {
         return panel;
     }
 
-    private JPanel buildMenuTab() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(UiTheme.cardBorder());
-        JList<String> list = new JList<>(menuModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        panel.add(new JScrollPane(list), BorderLayout.CENTER);
-
-        JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton refresh = new JButton("Refresh");
-        JButton add = UiTheme.primaryButton("Add Item");
-        actions.add(refresh);
-        actions.add(add);
-        panel.add(actions, BorderLayout.SOUTH);
-
-        refresh.addActionListener(e -> refreshMenu());
-        add.addActionListener(e -> {
-            JTextField name = new JTextField();
-            int res = JOptionPane.showConfirmDialog(this, name, "Menu Item",
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (res != JOptionPane.OK_OPTION) return;
-            String n = name.getText().trim();
-            if (n.isEmpty()) return;
-            state.menuItems.add(n);
-            refreshMenu();
-        });
-        return panel;
-    }
-
     private void refreshOrders() {
         state.refreshOrders();
         orderModel.clear();
@@ -104,11 +73,6 @@ public class AgentPanel extends JPanel {
             String customer = o.customer == null ? "Unknown" : o.customer.getFullName();
             orderModel.addElement(o.id + ") " + o.description + " | " + customer + " | " + o.status);
         }
-    }
-
-    private void refreshMenu() {
-        menuModel.clear();
-        for (String item : state.menuItems) menuModel.addElement(item);
     }
 
     private void updateStatus(int index) {

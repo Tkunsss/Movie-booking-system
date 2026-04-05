@@ -92,6 +92,10 @@ public class OrderDao {
         }
     }
 
+    public void cancelById(int orderId) {
+        updateStatus(orderId, "CANCELLED");
+    }
+
     public void deleteById(int orderId) {
         try (Connection conn = Database.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(

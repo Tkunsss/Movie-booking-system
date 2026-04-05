@@ -63,7 +63,6 @@ public class App {
             Map<String, Customer> customerMap = buildCustomerMap(customers);
             Map<Integer, Movie> movieMap = buildMovieMap(movies);
             List<Order> orders = orderDao.getAll(movieMap, customerMap);
-            List<String> menuItems = new ArrayList<>();
 
             int choice;
             do {
@@ -75,7 +74,7 @@ public class App {
                         managerFlow(sc, staffList, movies, movieDao, staffDao, orderDao);
                         break;
                     case 2:
-                        ticketingAgentFlow(sc, staffList, movies, menuItems, orders, orderDao);
+                        ticketingAgentFlow(sc, staffList, movies, orders, orderDao);
                         break;
                     case 3:
                         customerFlow(sc, movies, orders, customers, customerDao, orderDao);
@@ -162,7 +161,7 @@ public class App {
 
     // Method: ticketingAgentFlow - ticketing agent login and order/menu actions.
     private static void ticketingAgentFlow(Scanner sc, List<istaff> staffList, List<Movie> movies,
-                                           List<String> menuItems, List<Order> orders, OrderDao orderDao) {
+                                           List<Order> orders, OrderDao orderDao) {
         System.out.println("\n=== Ticketing Agent Login ===");
         System.out.print("Username: ");
         String username = sc.nextLine();
@@ -179,31 +178,23 @@ public class App {
         do {
             System.out.println("\n=== Ticketing Agent Menu ===");
             System.out.println("1) View Movies");
-            System.out.println("2) Create Menu Item");
-            System.out.println("3) View Orders");
-            System.out.println("4) Update Order Status");
+            System.out.println("2) View Orders");
+            System.out.println("3) Update Order Status");
             System.out.println("0) Logout");
-            choice = readInt(sc, "Choose: ", 0, 4);
+            choice = readInt(sc, "Choose: ", 0, 3);
 
             switch (choice) {
                 case 1:
                     printMovies(movies);
                     break;
                 case 2:
-                    if (selected.can("create_menu_item")) {
-                        createMenuItem(sc, menuItems);
-                    } else {
-                        System.out.println("Permission denied.");
-                    }
-                    break;
-                case 3:
                     if (selected.can("view_orders")) {
                         viewOrders(orders);
                     } else {
                         System.out.println("Permission denied.");
                     }
                     break;
-                case 4:
+                case 3:
                     if (selected.can("update_order_status")) {
                         updateOrderStatus(sc, orders, orderDao);
                     } else {
@@ -303,10 +294,9 @@ public class App {
             System.out.println("2) Create Order");
             System.out.println("3) View Customers");
             System.out.println("4) View Orders");
-            System.out.println("5) Checkout");
-            System.out.println("6) Refund Order");
+            System.out.println("5) Refund Order");
             System.out.println("0) Logout");
-            choice = readInt(sc, "Choose: ", 0, 6);
+            choice = readInt(sc, "Choose: ", 0, 5);
 
             switch (choice) {
                 case 1:
@@ -338,9 +328,6 @@ public class App {
                     }
                     break;
                 case 5:
-                    checkoutOrder(sc, orders, customerDao, orderDao);
-                    break;
-                case 6:
                     refundOrder(sc, orders, customerDao, orderDao);
                     break;
                 case 0:
@@ -585,19 +572,6 @@ public class App {
         order.status = "PAID";
         orderDao.updateStatus(order.id, order.status);
         return true;
-    }
-
-    // Method: createMenuItem - adds a new item to the menu list.
-    private static void createMenuItem(Scanner sc, List<String> menuItems) {
-        System.out.print("Menu item name: ");
-        String name = sc.nextLine().trim();
-        if (name.isEmpty()) {
-            System.out.println("Menu item name cannot be empty.");
-            return;
-        }
-        menuItems.add(name);
-        System.out.println("Menu item created: " + name);
-        System.out.println("Total menu items: " + menuItems.size());
     }
 
     // Method: viewOrders - lists all orders with customer and status.
@@ -929,36 +903,6 @@ public class App {
         Totals totals = calculateTotals(cart);
         printCheckout(cart, totals);
         addOrder(orders, selectedMovie, tickets, totals, customer, cart, orderDao);
-    }
-
-    // Method: checkoutOrder - cashier completes payment for an existing order.
-    private static void checkoutOrder(Scanner sc, List<Order> orders, CustomerDao customerDao, OrderDao orderDao) {
-        if (orders.isEmpty()) {
-            System.out.println("No orders to checkout.");
-            return;
-        }
-        viewOrders(orders);
-        int id = readInt(sc, "Enter order ID to checkout: ", 1, Integer.MAX_VALUE);
-        Order target = null;
-        for (Order order : orders) {
-            if (order.id == id) {
-                target = order;
-                break;
-            }
-        }
-        if (target == null) {
-            System.out.println("Order not found.");
-            return;
-        }
-        if (target.customer == null || target.totals == null || target.cart == null) {
-            System.out.println("Order is missing details. Cannot checkout.");
-            return;
-        }
-        if ("PAID".equalsIgnoreCase(target.status)) {
-            System.out.println("Order already paid.");
-            return;
-        }
-        processPayment(target.customer, target.cart, target.totals, target, customerDao, orderDao);
     }
 
     // Method: addOrder - creates and stores an order object.

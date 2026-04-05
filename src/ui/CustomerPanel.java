@@ -23,12 +23,21 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class CustomerPanel extends JPanel {
     private final AppState state;
+    private final List<Customer> activeCustomers = new ArrayList<>();
+    private final List<Integer> chosenSeats = new ArrayList<>();
+
+    private JComboBox<String> movieBox;
+    private JTextField ticketsField;
+    private JComboBox<String> typeBox;
+    private JLabel seatsSelected;
+    private JLabel totalLabel;
 
     public CustomerPanel(AppState state, Runnable onLogout) {
         this.state = state;
@@ -61,6 +70,8 @@ public class CustomerPanel extends JPanel {
         formWrap.add(card);
         center.add(formWrap, BorderLayout.CENTER);
         add(center, BorderLayout.CENTER);
+
+        refreshMovies();
     }
 
     private JPanel buildForm() {
@@ -70,14 +81,12 @@ public class CustomerPanel extends JPanel {
         c.insets = new Insets(6, 6, 6, 6);
         c.anchor = GridBagConstraints.WEST;
 
-        JComboBox<String> movieBox = new JComboBox<>(state.movies.stream()
-                .map(m -> m.getId() + " - " + m.getTitle())
-                .toArray(String[]::new));
-        JTextField ticketsField = new JTextField("1", 10);
-        JComboBox<String> typeBox = new JComboBox<>(new String[]{"Standard", "Premium"});
-        JLabel seatsSelected = new JLabel("Seats: none");
+        movieBox = new JComboBox<>();
+        ticketsField = new JTextField("1", 10);
+        typeBox = new JComboBox<>(new String[]{"Standard", "Premium"});
+        seatsSelected = new JLabel("Seats: none");
+        totalLabel = new JLabel("Total: --");
         JButton pickSeats = UiTheme.primaryButton("Pick Seats");
-        final List<Integer>[] chosenSeats = new List[]{List.of()};
 
         JRadioButton newCustomer = new JRadioButton("New Customer", true);
         JRadioButton existingCustomer = new JRadioButton("Existing Customer");
@@ -85,13 +94,10 @@ public class CustomerPanel extends JPanel {
         group.add(newCustomer);
         group.add(existingCustomer);
 
-        JComboBox<String> existingBox = new JComboBox<>(state.customers.stream()
-                .map(cu -> cu.getCustomerId() + " - " + cu.getFullName())
-                .toArray(String[]::new));
+        JComboBox<String> existingBox = new JComboBox<>();
         JButton refreshCustomers = new JButton("Refresh");
 
         JTextField nameField = new JTextField(16);
-        JTextField idField = new JTextField(16);
         JTextField phoneField = new JTextField(16);
         JTextField balanceField = new JTextField("0", 10);
 
@@ -108,6 +114,7 @@ public class CustomerPanel extends JPanel {
         seatRow.add(pickSeats);
         seatRow.add(seatsSelected);
         c.gridx = 1; c.gridy = row++; panel.add(seatRow, c);
+        c.gridx = 1; c.gridy = row++; panel.add(totalLabel, c);
 
         c.gridx = 0; c.gridy = row; panel.add(new JLabel("Customer Type"), c);
         JPanel radios = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
@@ -124,8 +131,6 @@ public class CustomerPanel extends JPanel {
         c.gridx = 1; c.gridy = row++; panel.add(existingRow, c);
         c.gridx = 0; c.gridy = row; panel.add(new JLabel("Customer Name"), c);
         c.gridx = 1; c.gridy = row++; panel.add(nameField, c);
-        c.gridx = 0; c.gridy = row; panel.add(new JLabel("Customer ID"), c);
-        c.gridx = 1; c.gridy = row++; panel.add(idField, c);
         c.gridx = 0; c.gridy = row; panel.add(new JLabel("Phone"), c);
         c.gridx = 1; c.gridy = row++; panel.add(phoneField, c);
         c.gridx = 0; c.gridy = row; panel.add(new JLabel("Balance"), c);
@@ -134,15 +139,24 @@ public class CustomerPanel extends JPanel {
         JButton book = UiTheme.primaryButton("Book & Pay");
         c.gridx = 1; c.gridy = row; panel.add(book, c);
 
+        Runnable rebuildExisting = () -> {
+            activeCustomers.clear();
+            existingBox.removeAllItems();
+            for (Customer cu : state.customers) {
+                if (!cu.isActive()) continue;
+                activeCustomers.add(cu);
+                existingBox.addItem(cu.getCustomerId() + " - " + cu.getFullName());
+            }
+        };
+
         Runnable syncMode = () -> {
             boolean isNew = newCustomer.isSelected();
-            existingBox.setEnabled(!isNew);
+            existingBox.setEnabled(!isNew && activeCustomers.size() > 0);
             nameField.setEnabled(isNew);
-            idField.setEnabled(isNew);
             phoneField.setEnabled(isNew);
             balanceField.setEnabled(isNew);
-            if (!isNew && state.customers.size() > 0) {
-                Customer cst = state.customers.get(existingBox.getSelectedIndex());
+            if (!isNew && activeCustomers.size() > 0) {
+                Customer cst = activeCustomers.get(existingBox.getSelectedIndex());
                 balanceField.setText(String.valueOf(cst.getBalance()));
             }
         };
@@ -151,12 +165,10 @@ public class CustomerPanel extends JPanel {
         existingBox.addActionListener(e -> syncMode.run());
         refreshCustomers.addActionListener(e -> {
             state.refreshCustomers();
-            existingBox.removeAllItems();
-            for (Customer cu : state.customers) {
-                existingBox.addItem(cu.getCustomerId() + " - " + cu.getFullName());
-            }
+            rebuildExisting.run();
             syncMode.run();
         });
+        rebuildExisting.run();
         syncMode.run();
 
         pickSeats.addActionListener(e -> {
@@ -170,12 +182,16 @@ public class CustomerPanel extends JPanel {
                         tickets, booked);
                 dialog.setVisible(true);
                 if (!dialog.isConfirmed()) return;
-                chosenSeats[0] = dialog.getSelectedSeats();
-                seatsSelected.setText("Seats: " + chosenSeats[0]);
+                chosenSeats.clear();
+                chosenSeats.addAll(dialog.getSelectedSeats());
+                seatsSelected.setText("Seats: " + chosenSeats);
+                updateTotalLabel();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid ticket count.");
             }
         });
+        movieBox.addActionListener(e -> updateTotalLabel());
+        typeBox.addActionListener(e -> updateTotalLabel());
 
         book.addActionListener(e -> {
             try {
@@ -188,19 +204,16 @@ public class CustomerPanel extends JPanel {
                 int tickets = Integer.parseInt(ticketsField.getText().trim());
                 String type = (String) typeBox.getSelectedItem();
 
-                if (chosenSeats[0].size() != tickets) {
+                if (chosenSeats.size() != tickets) {
                     JOptionPane.showMessageDialog(this, "Please pick " + tickets + " seats.");
                     return;
                 }
 
                 Customer customer;
-                if (existingCustomer.isSelected() && state.customers.size() > 0) {
-                    customer = state.customers.get(existingBox.getSelectedIndex());
+                if (existingCustomer.isSelected() && activeCustomers.size() > 0) {
+                    customer = activeCustomers.get(existingBox.getSelectedIndex());
                 } else {
-                    String customerId = idField.getText().trim();
-                    if (customerId.isEmpty()) {
-                        customerId = "WALKIN-" + System.currentTimeMillis();
-                    }
+                    String customerId = generateCustomerId();
                     double balance = Double.parseDouble(balanceField.getText().trim());
                     customer = new Customer(customerId,
                             nameField.getText().trim(),
@@ -213,7 +226,7 @@ public class CustomerPanel extends JPanel {
                 }
 
                 Cart cart = new Cart();
-                for (int seat : chosenSeats[0]) {
+                for (int seat : chosenSeats) {
                     Ticket t = "Premium".equals(type)
                             ? new PremiumTicket(movie, seat)
                             : new StandardTicket(movie, seat);
@@ -243,7 +256,7 @@ public class CustomerPanel extends JPanel {
                         (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
                         movie.getTitle(),
                         customer.getFullName(),
-                        chosenSeats[0],
+                        chosenSeats,
                         totals.total,
                         order.id
                 );
@@ -252,5 +265,54 @@ public class CustomerPanel extends JPanel {
             }
         });
         return panel;
+    }
+
+    private String generateCustomerId() {
+        String id;
+        do {
+            id = "CUST-" + System.currentTimeMillis();
+        } while (state.customerDao.existsById(id));
+        return id;
+    }
+
+    public void refreshMovies() {
+        state.refreshMovies();
+        movieBox.removeAllItems();
+        for (Movie m : state.movies) {
+            movieBox.addItem(m.getId() + " - " + m.getTitle());
+        }
+        chosenSeats.clear();
+        seatsSelected.setText("Seats: none");
+        updateTotalLabel();
+    }
+
+    private void updateTotalLabel() {
+        int movieIndex = movieBox.getSelectedIndex();
+        if (movieIndex < 0 || movieIndex >= state.movies.size()) {
+            totalLabel.setText("Total: --");
+            return;
+        }
+        int tickets;
+        try {
+            tickets = Integer.parseInt(ticketsField.getText().trim());
+        } catch (NumberFormatException e) {
+            totalLabel.setText("Total: --");
+            return;
+        }
+        if (chosenSeats.size() != tickets || tickets <= 0) {
+            totalLabel.setText("Total: --");
+            return;
+        }
+        Movie movie = state.movies.get(movieIndex);
+        String type = (String) typeBox.getSelectedItem();
+        Cart cart = new Cart();
+        for (int seat : chosenSeats) {
+            Ticket t = "Premium".equals(type)
+                    ? new PremiumTicket(movie, seat)
+                    : new StandardTicket(movie, seat);
+            cart.addItem(t);
+        }
+        Totals totals = TotalsUtil.calculateTotals(cart);
+        totalLabel.setText("Total: $" + totals.total);
     }
 }

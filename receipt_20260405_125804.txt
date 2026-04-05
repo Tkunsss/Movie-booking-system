@@ -1,0 +1,16 @@
+===== Movie Ticket Receipt =====
+Customer: kun
+Customer ID: 12333
+Phone: 00000000
+-----------------------------
+Tickets:
+- Premium Ticket (VIP) | Movie: Avatar 2 | Seat: 11 | Price: $8.0
+- Premium Ticket (VIP) | Movie: Avatar 2 | Seat: 12 | Price: $8.0
+-----------------------------
+Subtotal: $16.0
+Discount: -$0.8
+Tax: $1.52
+Total Amount Paid: $16.72
+Balance Remaining: $83.28
+-----------------------------
+Thank you for your purchase!

@@ -29,7 +29,6 @@ public class AppState {
     public List<istaff> staffList = new ArrayList<>();
     public List<Customer> customers = new ArrayList<>();
     public List<Order> orders = new ArrayList<>();
-    public List<String> menuItems = new ArrayList<>();
 
     public void init() {
         Database.init();

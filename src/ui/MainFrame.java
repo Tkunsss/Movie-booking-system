@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
     private final AppState state;
     private final CardLayout cards = new CardLayout();
     private final JPanel root = new JPanel(cards);
+    private final CustomerPanel customerPanel;
 
     public MainFrame(AppState state) {
         super("Movie Booking System");
@@ -25,7 +26,8 @@ public class MainFrame extends JFrame {
 
         root.add(new ManagerPanel(state, this::showLogin), "manager");
         root.add(new CashierPanel(state, this::showLogin), "cashier");
-        root.add(new CustomerPanel(state, this::showLogin), "customer");
+        customerPanel = new CustomerPanel(state, this::showLogin);
+        root.add(customerPanel, "customer");
         root.add(new AgentPanel(state, this::showLogin), "ticketing");
 
         setContentPane(root);
@@ -40,6 +42,7 @@ public class MainFrame extends JFrame {
         } else if ("ticketing".equals(roleKey)) {
             cards.show(root, "ticketing");
         } else {
+            customerPanel.refreshMovies();
             cards.show(root, "customer");
         }
     }

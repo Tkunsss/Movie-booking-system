@@ -70,4 +70,40 @@ public class CustomerDao {
             throw new RuntimeException("Update customer balance failed", e);
         }
     }
+
+    public void setActive(String customerId, boolean active) {
+        String sql = "UPDATE customers SET active=? WHERE customer_id=?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, active ? 1 : 0);
+            ps.setString(2, customerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Update customer active failed", e);
+        }
+    }
+
+    public void deleteById(String customerId) {
+        String sql = "DELETE FROM customers WHERE customer_id=?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, customerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Delete customer failed", e);
+        }
+    }
+
+    public boolean existsById(String customerId) {
+        String sql = "SELECT 1 FROM customers WHERE customer_id=? LIMIT 1";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Check customer exists failed", e);
+        }
+    }
 }

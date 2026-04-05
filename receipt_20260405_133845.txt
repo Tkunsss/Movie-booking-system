@@ -1,0 +1,17 @@
+===== Movie Ticket Receipt =====
+Customer: kkk
+Customer ID: 1222
+Phone: 00000000
+-----------------------------
+Tickets:
+- Premium Ticket (VIP) | Movie: John Wick 4 | Seat: 79 | Price: $9.0
+- Premium Ticket (VIP) | Movie: John Wick 4 | Seat: 80 | Price: $9.0
+- Premium Ticket (VIP) | Movie: John Wick 4 | Seat: 78 | Price: $9.0
+-----------------------------
+Subtotal: $27.0
+Discount: -$1.35
+Tax: $2.565
+Total Amount Paid: $28.215
+Balance Remaining: $1.7850000000000001
+-----------------------------
+Thank you for your purchase!
