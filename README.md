@@ -20,6 +20,12 @@ This repository contains summarized answers for 50 OOP exam sets. Each question 
 
 ---
 
+# OOP Exam Bank - Java
+
+This README contains 50 sets of Object-Oriented Programming (OOP) questions with simplified explanations and examples based on a project using Java.  
+
+---
+
 ## Set 1
 
 **Q1: What is the difference between a class and an object, and why do objects need both fields and methods?**  
@@ -279,7 +285,6 @@ A: Cart contains List<Ticket>.
 A: Composition keeps classes focused; inheritance can be too rigid.
 
 ---
-
 ## Set 21
 
 **Q1: What does it mean for two objects to collaborate without one inheriting from the other?**  
@@ -483,4 +488,187 @@ A: Access modifiers control visibility.
 **Q2: Show one class in your project and explain why some members should not all have the same access level.**  
 A: Customer fields are private to protect data.
 
-**Q3: Explain how poor access control can
+**Q3: Explain how poor access control can lead to bugs or make refactoring harder.**  
+A: All-public fields break encapsulation, expose internals, and make changes risky.
+
+---
+
+## Set 37
+
+**Q1: What is the difference between a shallow copy and a deep copy?**  
+A: Shallow copy copies references; deep copy duplicates objects.
+
+**Q2: Show one place in your project where copying objects must be deep to avoid side effects.**  
+A: Cloning Cart with Tickets requires deep copy to prevent shared modification.
+
+**Q3: Explain what could happen if shallow copy is used incorrectly.**  
+A: Modifying one object could unexpectedly change another.
+
+---
+
+## Set 38
+
+**Q1: What is an enum in Java, and why is it useful?**  
+A: Enum = fixed set of constants; improves readability and type safety.
+
+**Q2: Show one example in your project where an enum is better than using strings or ints.**  
+A: OrderStatus enum = PENDING, PAID, CANCELLED.
+
+**Q3: Explain how using enums can prevent bugs compared to raw constants.**  
+A: Enums prevent invalid values (like typo strings) from being assigned.
+
+---
+
+## Set 39
+
+**Q1: What is a package in Java, and why is it useful for large projects?**  
+A: Package groups related classes for organization and namespace control.
+
+**Q2: Show one package structure in your project and explain its purpose.**  
+A: src/service = business logic, src/model = data objects.
+
+**Q3: Explain why poor package organization makes maintenance harder.**  
+A: Classes scattered everywhere are harder to locate and reuse.
+
+---
+
+## Set 40
+
+**Q1: What is a dependency, and why should it be minimized in OOP?**  
+A: Dependency = class relies on another; minimal dependency improves modularity.
+
+**Q2: Show one example of a dependency injection or decoupling in your project.**  
+A: DAO passed into Service constructor instead of creating inside Service.
+
+**Q3: Explain how minimizing dependencies improves testing and maintainability.**  
+A: Decoupled classes are easier to mock and change independently.
+
+---
+
+## Set 41
+
+**Q1: What is the difference between aggregation and composition?**  
+A: Aggregation = part can exist alone; composition = part depends on whole.
+
+**Q2: Show one example of aggregation and one of composition in your project.**  
+A: Cart aggregates Tickets; Movie has composition with MovieDetails object.
+
+**Q3: Explain why choosing the wrong type would make the lifecycle management confusing.**  
+A: Wrong choice can cause objects to disappear unexpectedly or remain orphaned.
+
+---
+
+## Set 42
+
+**Q1: Why is immutability useful in object design?**  
+A: Immutable objects cannot change state; safer for concurrency.
+
+**Q2: Show one class in your project that could benefit from being immutable.**  
+A: Movie objects could be immutable after creation.
+
+**Q3: Explain what problems mutable objects might cause in a multithreaded scenario.**  
+A: Race conditions and inconsistent data.
+
+---
+
+## Set 43
+
+**Q1: What is the difference between final, finally, and finalize in Java?**  
+A: final = constant or cannot override, finally = block executed after try, finalize = GC cleanup.
+
+**Q2: Show one place in your project where final is useful.**  
+A: final int MAX_TICKETS to prevent magic numbers.
+
+**Q3: Explain why finally block is important in exception handling.**  
+A: Ensures resource release even if exception occurs.
+
+---
+
+## Set 44
+
+**Q1: What is a lambda expression, and why is it useful in Java?**  
+A: Lambda = anonymous function; makes code concise for functional interfaces.
+
+**Q2: Show one lambda example in your project.**  
+A: tickets.forEach(t -> System.out.println(t.getPrice()));
+
+**Q3: Explain how using lambdas can make your code easier to maintain.**  
+A: Reduces boilerplate and improves readability.
+
+---
+
+## Set 45
+
+**Q1: What is a functional interface?**  
+A: Interface with only one abstract method.
+
+**Q2: Show one functional interface in your project and how a lambda can implement it.**  
+A: PriceCalculator interface, lambda: (ticket) -> ticket.getPrice() * 1.1
+
+**Q3: Explain why functional interfaces are important for modern Java features.**  
+A: Support lambdas and streams for concise code.
+
+---
+
+## Set 46
+
+**Q1: What is the difference between fail-fast and fail-safe iterators?**  
+A: Fail-fast detects concurrent modification; fail-safe works on copy.
+
+**Q2: Show an example of a fail-fast collection in your project.**  
+A: ArrayList.iterator() in loops.
+
+**Q3: Explain why understanding iterator type prevents runtime errors.**  
+A: Avoids ConcurrentModificationException.
+
+---
+
+## Set 47
+
+**Q1: What is serialization, and why is it useful?**  
+A: Serialization converts object to bytes for storage or transfer.
+
+**Q2: Show one object in your project that might be serialized.**  
+A: Customer object saved to file or database cache.
+
+**Q3: Explain what could go wrong if a class is not serializable but you try to save it.**  
+A: Throws NotSerializableException.
+
+---
+
+## Set 48
+
+**Q1: What is the difference between transient and static fields during serialization?**  
+A: transient = skipped; static = belongs to class, not instance.
+
+**Q2: Show one example in your project where transient is needed.**  
+A: Password field should be transient to avoid storing sensitive data.
+
+**Q3: Explain why careful selection of transient fields improves security.**  
+A: Prevents sensitive info from being persisted.
+
+---
+
+## Set 49
+
+**Q1: What is the difference between a shallow clone and deep clone in Java?**  
+A: Shallow = copies references; deep = copies objects recursively.
+
+**Q2: Show one place in your project where deep clone is necessary.**  
+A: Cloning a Cart with Tickets for undo feature.
+
+**Q3: Explain what bugs shallow cloning could introduce.**  
+A: Shared references cause unexpected changes across objects.
+
+---
+
+## Set 50
+
+**Q1: Why is documentation important in object-oriented projects?**  
+A: Explains purpose, usage, and behavior; helps maintenance.
+
+**Q2: Show one class in your project where adding comments improves clarity.**  
+A: Customer class: explains validation rules and method usage.
+
+**Q3: Explain what could happen if the code is not documented.**  
+A: Hard to maintain, understand, or extend by team members.
