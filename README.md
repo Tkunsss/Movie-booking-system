@@ -5,7 +5,7 @@ This README lists answers for Sets 1-50 and shows a concrete file path from this
 ## Set 1
 Q1: What is the difference between a class and an object, and why do objects need both fields and methods?
 A: A class is a blueprint; an object is a real instance. Fields store state and methods provide behavior to change or use that state. (Path example: src/service/Customer.java)
-Q2: In your project, show one class and explain its responsibility, its important fields, and one method that changes the object?s state.
+<br>Q2: In your project, show one class and explain its responsibility, its important fields, and one method that changes the object?s state.
 A: Customer manages customer data and balance. Important fields: customerId, fullName, balance. Method deductBalance changes the balance. (Path: src/service/Customer.java)
 Q3: In your project, explain why this part should be modeled using objects instead of writing everything in one long main() method or using many unrelated variables.
 A: Orders, carts, and customers are separate objects so data and behavior stay together and the main flow stays readable. (Path: src/model/Order.java)
