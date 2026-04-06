@@ -1,7 +1,7 @@
 package service;
 
-// OOP: Interface (contract) for polymorphism across staff types.
-// Interface for all staff types.
+// Abstraction: interface defines a contract for staff behavior.
+// Polymorphism: different staff classes implement this interface.
 public interface istaff {
 
     // Staff id.

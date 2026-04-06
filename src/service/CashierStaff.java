@@ -1,6 +1,6 @@
 package service;
 
-// OOP: Implements interface (polymorphism via istaff).
+// Abstraction/Polymorphism: implements istaff interface.
 // This class is for cashier staff.
 public class CashierStaff implements istaff{
    

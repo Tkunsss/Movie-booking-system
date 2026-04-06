@@ -26,6 +26,11 @@ import java.util.Scanner;
 
 // Main application class.
 public class App {
+    // OOP summary in this file:
+    // - Abstraction/Polymorphism: uses istaff interface to handle ManagerStaff/CashierStaff/Ticketing_Agent.
+    // - Inheritance: Ticket has StandardTicket/PremiumTicket subclasses (created in booking flows).
+    // - Composition: Order has Customer + Cart + Totals; Cart holds a list of Ticket.
+    // - Encapsulation: Movie/Customer fields accessed via getters/setters, not directly.
     // Method: main - entry point, sets up initial data and role menu loop.
     public static void main(String[] args) {
         if (args.length == 0 || !"console".equalsIgnoreCase(args[0])) {
@@ -248,6 +253,9 @@ public class App {
 
     // Method: doStaffAction - helper to show permission result.
     private static void doStaffAction(istaff staff, String action, String label) {
+        
+        // Polymorphism: staff can be any class that implements istaff.
+        
         if (staff.can(action)) {
             System.out.println(label + ": " + mark(true));
         } else {
@@ -404,6 +412,7 @@ public class App {
             Ticket ticket = (ticketType == 1)
                     ? new StandardTicket(selectedMovie, seatNumber)
                     : new PremiumTicket(selectedMovie, seatNumber);
+            // Inheritance: StandardTicket/PremiumTicket are Ticket subclasses.
             cart.addItem(ticket);
         }
 

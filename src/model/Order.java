@@ -4,9 +4,12 @@ import service.Cart;
 import service.Customer;
 
 // OOP: Class modeling order state; object = one booking/order.
+
 // OOP: Composition (has-a): Order has Customer, Cart, Totals.
+
 // Stores one order.
 public class Order {
+    // Composition: Order has Customer, Cart, and Totals objects.
     public int id;
     public String description;
     public String status;

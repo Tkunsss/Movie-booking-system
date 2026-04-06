@@ -1,9 +1,12 @@
 package model;
 
 // OOP: Class = blueprint, object = Movie instance.
+
 // OOP: Encapsulation via private fields + getters/setters.
+
 // This class stores one movie.
 public class Movie {
+    // Encapsulation: fields are private; access through getters/setters.
     // DB id.
     private int id;
     // Movie name.

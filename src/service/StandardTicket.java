@@ -12,12 +12,14 @@ public class StandardTicket extends Ticket {
     }
 
     @Override
+    // Overriding: specialized price for StandardTicket.
     // Normal price.
     public double calculatePrice() {
         return movie.getPrice(); // normal price
     }
 
     @Override
+    // Overriding: specialized type name for StandardTicket.
     // Name shown on ticket.
     public String getType() {
         return "Standard Ticket";

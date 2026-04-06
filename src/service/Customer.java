@@ -6,6 +6,7 @@ package service;
 public class Customer {
 
     // Basic info.
+    // Encapsulation: private fields with validation in setters.
     private String customerId;
     private String fullName;
     private String phone;
@@ -14,6 +15,7 @@ public class Customer {
     private boolean active;
 
     // Who created this customer (staff).
+    // Abstraction/Polymorphism: uses istaff interface, any staff type can create a customer.
     private istaff createdBy;
 
     // Build a customer with data.

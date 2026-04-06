@@ -8,6 +8,7 @@ import model.Movie;
 public class Ticket {
 
     // Movie and seat for this ticket.
+    // Composition: Ticket has a Movie reference.
     protected Movie movie;
     protected int seatNumber;
 

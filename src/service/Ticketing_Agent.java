@@ -1,6 +1,6 @@
 package service;
 
-// OOP: Implements interface (polymorphism via istaff).
+// Abstraction/Polymorphism: implements istaff interface.
 // This class is for ticketing agents.
 public class Ticketing_Agent implements istaff{
     

@@ -8,6 +8,7 @@ import java.util.List;
 public class Cart {
 
     // List of tickets in cart.
+    // Composition: Cart has a list of Ticket objects.
     private List<Ticket> items;
 
     // Start with empty cart.
@@ -29,6 +30,7 @@ public class Cart {
     public double calculateSubtotal() {
         double total = 0;
         for (Ticket t : items) {
+            // Polymorphism: calculatePrice() uses the actual Ticket subclass.
             total += t.calculatePrice();
         }
         return total;
